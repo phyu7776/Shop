@@ -1,5 +1,5 @@
 
-![img](캡쳐.)
+![](https://github.com/phyu7776/Shop/blob/master/%EC%BA%A1%EC%B2%98.JPG)  
 쇼핑몰 만들기 (Maria DB)  
 이미지 첨부 기능  
 %주의사항%  
