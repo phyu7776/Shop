@@ -28,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values (NEXTVAL(tbl_goods_seq), #{gdsName}, #{cateCode},#{gdsPrice},#{gdsStock}, #{gdsDes}, #{gdsImg}, #{gdsThumbImg})
 	</insert>
 	<!-- 상품 목록 -->
-	<select id="goodslist" resultType="com.shop.domain.GoodsVO">
-		select gdsNum, gdsName, cateCode, gdsPrice, gdsStock, gdsDes, gdsImg,gdsDate
-		from tbl_goods
-		order by gdsNum desc
+	<select id="goodslist" resultType="com.shop.domain.GoodsViewVO">
+		SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.cateCodeRef,goods_category.cateName ,gdsPrice , gdsStock,gdsDes,gdsImg,gdsDate, tbl_goods.gdsImg, tbl_goods.gdsThumbImg
+	FROM tbl_goods
+	INNER JOIN goods_category
+	ON tbl_goods.cateCode = goods_category.cateCode
 	</select>
 
 	<!-- 상품 조회 -->
@@ -59,7 +60,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	cateCode = #{cateCode},
 	gdsPrice = #{gdsPrice},
 	gdsStock = #{gdsStock},
-	gdsDes = #{gdsDes}
+	gdsDes = #{gdsDes},
+	gdsImg = #{gdsImg},
+	gdsThumbImg = #{gdsThumbImg}
+	
 	where gdsNum = ${gdsNum}
 	</update>
 

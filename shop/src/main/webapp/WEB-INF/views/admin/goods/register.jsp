@@ -4,6 +4,57 @@
 <html>
 <head>
 	<title>Home</title>
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<!-- 합쳐지고 최소화된 최신 CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<!-- 부가적인 테마 -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	
+	<script src="${pageContext.request.contextPath}/resources/ckeditor/ckeditor.js"></script>
+	
+	<style>
+ 	body { font-family:'맑은 고딕', verdana; padding:0; margin:0; }
+ 	ul { padding:0; margin:0; list-style:none;  }
+
+	div#root { width:90%; margin:0 auto; }
+ 
+ 	header#header { font-size:60px; padding:20px 0; }
+ 	header#header h1 a { color:#000; font-weight:bold; }
+ 
+ 	nav#nav { padding:10px; text-align:right; }
+ 	nav#nav ul li { display:inline-block; margin-left:10px; }
+
+    section#container { padding:20px 0; border-top:2px solid #eee; border-bottom:2px solid #eee; }
+ 	section#container::after { content:""; display:block; clear:both; }
+ 	aside { float:left; width:200px; }
+ 	div#container_box { float:right; width:calc(100% - 200px - 20px); }
+ 
+ 	aside ul li { text-align:center; margin-bottom:10px; }
+ 
+ 	footer#footer { background:#f9f9f9; padding:20px; }
+ 	footer#footer ul li { display:inline-block; margin-right:10px; }
+</style>
+
+<style>
+	.inputArea { margin:1px 0; }
+	select { width:100px; }
+	label { display:inline-block; width:70px; padding:5px; }
+	label[for='gdsDes'] { display:block; }
+	input { width:150px; }
+	textarea#gdsDes { width:400px; height:180px; }
+</style>
+
+<style>
+	#container_box table td{width:100px;}
+</style>
+
+<style>
+	.ck.ck-editor{max-width:1000px;}
+	.ck.ck-editor__editable{min-height:500px;}
+</style>
+
 </head>
 <body>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -54,6 +105,16 @@
 						<div class="inputArea">
 							<label for="gdsDes">상품소개</label>
 							<textarea rows="5" cols="50" id="gdsDes" name="gdsDes"></textarea>
+							<script>
+								var ckeditor_config = {
+									resize_enaleb : false,
+									enterMode : CKEDITOR.ENTER_BR,
+									shiftEnterMode : CKEDITOR.ENTER_P,
+									filebrowserUploadUrl : "/controller/admin/goods/ckUpload"
+								};
+
+								CKEDITOR.replace("gdsDes", ckeditor_config);
+							</script>
 						</div>
 						<div class="inputArea">
 							<label for="gdsImg">이미지</label> <input type="file" id="gdsImg"
@@ -172,6 +233,17 @@ $(document).on("change", "select.category1", function(){
 	});
 	
 });
+</script>
+<script>
+var regExp = /[^0-9]/gi;
+
+$("#gdsPrice").keyup(function(){ numCheck($(this)); });
+$("#gdsStock").keyup(function(){ numCheck($(this)); });
+
+function numCheck(selector) {
+ var tempVal = selector.val();
+ selector.val(tempVal.replace(regExp, ""));
+}
 </script>
 </body>
 </html>

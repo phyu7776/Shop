@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<GoodsVO> goodslist() throws Exception {
+	public List<GoodsViewVO> goodslist() throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("서비스");
 		return dao.goodslist();
