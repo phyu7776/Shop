@@ -34,6 +34,21 @@
  	div#container_box { float:right; width:calc(100% - 200px - 20px); }
  
  	aside ul li { text-align:center; margin-bottom:10px; }
+ 	
+ 	section#container { }
+ 
+ aside h3 { font-size:22px; margin-bottom:20px; text-align:center; }
+ aside li { font-size:16px; text-align:center; }
+ aside li a { color:#000; display:block; padding:10px 0; }
+ aside li a:hover { text-decoration:none; background:#eee; }
+ 
+ aside li { position:relative; }
+ aside li:hover { background:#eee; }   
+ aside li > ul.low { display:none; position:absolute; top:0; left:180px;  }
+ aside li:hover > ul.low { display:block; }
+ aside li:hover > ul.low li a { background:#eee; border:1px solid #eee; }
+ aside li:hover > ul.low li a:hover { background:#fff;}
+ aside li > ul.low li { width:180px; }
  
  	footer#footer { background:#f9f9f9; padding:20px; }
  	footer#footer ul li { display:inline-block; margin-right:10px; }
