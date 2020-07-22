@@ -6,6 +6,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.shop.domain.GoodsViewVO;
+import com.shop.domain.ReplyListVO;
+import com.shop.domain.ReplyVO;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +45,19 @@ public class ShopDAOImpl implements ShopDAO{
 	public GoodsViewVO goodsView(int gdsNum) throws Exception {
 		// TODO Auto-generated method stub
 		return sql.selectOne(namespace + ".goodsView",gdsNum);
+	}
+
+	@Override
+	public void registReply(ReplyVO reply) throws Exception {
+		// TODO Auto-generated method stub
+		sql.insert(namespace + ".registReply", reply);
+		
+	}
+
+	@Override
+	public List<ReplyListVO> replyList(int gdsNum) throws Exception {
+		// TODO Auto-generated method stub
+		return sql.selectList(namespace + ".replyList",gdsNum);
 	}
 
 }

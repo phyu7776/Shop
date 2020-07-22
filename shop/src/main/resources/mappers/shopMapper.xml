@@ -24,6 +24,7 @@ SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.ca
 	ON tbl_goods.cateCode = goods_category.cateCode
 	WHERE tbl_goods.cateCode = #{cateCode}
 	</select>
+	
 <!-- 상품 조회 + 카테고리 조인 -->
 <select id="goodsView" resultType="com.shop.domain.GoodsViewVO">
 SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.cateCodeRef,goods_category.cateName ,gdsPrice , gdsStock,gdsDes,gdsImg,gdsDate, tbl_goods.gdsImg, tbl_goods.gdsThumbImg
@@ -33,4 +34,20 @@ SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.ca
 	WHERE tbl_goods.gdsNum = #{gdsNum}
 	</select>
 	
+	<!-- 상품 소감(댓글) 작성 -->
+<insert id="registReply">
+	INSERT INTO tbl_reply (gdsNum,userId,repNum,repCon)
+VALUES (#{gdsNum}, #{userId},nextval(tbl_reply_seq),#{repCon});
+</insert>
+
+<!-- 상품 소감(댓글) 리스트 -->
+<select id="replyList" resultType="com.shop.domain.ReplyListVO">
+SELECT
+tbl_reply.gdsNum, tbl_reply.userId, tbl_reply.repNum, tbl_reply.repCon, tbl_reply.repDate, tbl_member.userName
+from tbl_reply
+inner join tbl_member
+on tbl_reply.userId = tbl_member.userId
+where gdsNum = #{gdsNum}
+</select>
+
 </mapper>
