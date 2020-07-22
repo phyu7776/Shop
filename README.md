@@ -1,10 +1,10 @@
 
 ![](https://github.com/phyu7776/Shop/blob/master/%EC%BA%A1%EC%B2%98.JPG)  
 
-client에서 요청을하면 controller에 진입하여 요청한 작업을 수행하고 뷰쪽으로 데이터를 전달합니다.
-@Controller 를 이용하여 컨트롤러 라고 지정합니다.
-@RequestMapping 으로 jsp파일의 요청경로를 지정합니다.
-정해진 로직을 수행후 return 으로 뷰파일로 다시 전달합니다.
+client에서 요청을하면 controller에 진입하여 요청한 작업을 수행하고 뷰쪽으로 데이터를 전달합니다.  
+@Controller 를 이용하여 컨트롤러 라고 지정합니다.  
+@RequestMapping 으로 jsp파일의 요청경로를 지정합니다.  
+정해진 로직을 수행후 return 으로 뷰파일로 다시 전달합니다.  
 쇼핑몰 만들기 (Maria DB)  
 
 
