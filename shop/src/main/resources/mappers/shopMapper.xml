@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shop.mappers.shopMapper">
+
+
+<!--  카테고리 1차 분류 -->
+<select id="list_1" resultType="com.shop.domain.GoodsViewVO">
+SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.cateCodeRef,goods_category.cateName ,gdsPrice , gdsStock,gdsDes,gdsImg,gdsDate, tbl_goods.gdsImg, tbl_goods.gdsThumbImg
+	FROM tbl_goods
+	INNER JOIN goods_category
+	ON tbl_goods.cateCode = goods_category.cateCode
+	WHERE tbl_goods.cateCode = #{cateCode}
+	OR goods_category.cateCodeRef = #{cateCodeRef}
+	</select>
+
+
+<!--  카테고리 2차 분류 -->
+<select id="list_2" resultType="com.shop.domain.GoodsViewVO">
+SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.cateCodeRef,goods_category.cateName ,gdsPrice , gdsStock,gdsDes,gdsImg,gdsDate, tbl_goods.gdsImg, tbl_goods.gdsThumbImg
+	FROM tbl_goods
+	INNER JOIN goods_category
+	ON tbl_goods.cateCode = goods_category.cateCode
+	WHERE tbl_goods.cateCode = #{cateCode}
+	</select>
+<!-- 상품 조회 + 카테고리 조인 -->
+<select id="goodsView" resultType="com.shop.domain.GoodsViewVO">
+SELECT tbl_goods.gdsNum, tbl_goods.gdsName, tbl_goods.cateCode,goods_category.cateCodeRef,goods_category.cateName ,gdsPrice , gdsStock,gdsDes,gdsImg,gdsDate, tbl_goods.gdsImg, tbl_goods.gdsThumbImg
+	FROM tbl_goods
+	INNER JOIN goods_category
+	ON tbl_goods.cateCode = goods_category.cateCode
+	WHERE tbl_goods.gdsNum = #{gdsNum}
+	</select>
+	
+</mapper>
