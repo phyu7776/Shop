@@ -50,4 +50,24 @@ on tbl_reply.userId = tbl_member.userId
 where gdsNum = #{gdsNum}
 </select>
 
+<!-- 아이디 체크 (삭제를 위해) -->
+<select id="replyUserIdCheck" resultType = "String">
+SELECT userId FROM tbl_reply
+WHERE repNum  = #{repNum}
+</select>
+
+<!-- 삭제 -->
+<delete id="deleteReply">
+DELETE from tbl_reply 
+where repNum = #{repNum}
+AND userId = #{userId}
+</delete>
+
+<!-- 댓글 수정 -->
+<update id="modifyReply">
+UPDATE tbl_reply                                 
+SET repCon = #{repCon}                       
+WHERE repNum = #{repNum} AND userId = #{userId}
+</update>
+
 </mapper>

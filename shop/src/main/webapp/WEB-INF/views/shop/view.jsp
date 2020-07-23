@@ -5,7 +5,7 @@
 <head>
 	<title>Home</title>
 	
-	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<!-- 합쳐지고 최소화된 최신 CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
@@ -14,6 +14,50 @@
 
 	<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	
+		<script>
+function replyList() {
+	
+	var gdsNum = ${view.gdsNum};
+	
+	// 비동기식 데이터 요청
+	$.getJSON("/controller/shop/view/replyList" + "?n=" + gdsNum, function(data){
+		var str = "";
+		
+		$(data).each(function(){
+			
+			console.log(data);
+			
+			// 날짜 데이터를 보기 쉽게 변환
+			var repDate = new Date(this.repDate);
+			repDate = repDate.toLocaleDateString("ko-US")
+							
+			// HTML코드 조립
+			str += "<li data-repNum='" + this.repNum + "'>" //"<li data-gdsNum='" + this.gdsNum + "'>"
+				 + "<div class='userInfo'>"
+				 + "<span class='userName'>" + this.userName + "</span>"
+				 + "<span class='date'>" + repDate + "</span>"
+				 + "</div>"
+				 + "<div class='replyContent'>" + this.repCon + "</div>"
+				 
+				 + "<c:if test='${member != null}'>"
+				 
+				 + "<div class='replyFooter'>"
+				 + "<button type='button' class='modify' data-repNum='" + this.repNum + "'>M</button>"
+				 + "<button type='button' class='delete' data-repNum='" + this.repNum + "'>D</button>"
+				 + "</div>"
+				 
+				 + "</c:if>"
+				 
+				 + "</li>";											
+		});
+		
+		// 조립한 HTML코드를 추가
+		$("section.replyList ol").html(str);
+	});
+	
+}
+</script>
 <style>
 
  body { margin:0; padding:0; font-family:'맑은 고딕', verdana; }
@@ -99,6 +143,18 @@
  section.replyList div.userInfo .userName { font-size:24px; font-weight:bold; }
  section.replyList div.userInfo .date { color:#999; display:inline-block; margin-left:10px; }
  section.replyList replyContent { padding:10px; margin:20px 0; }
+ section.replyList replyFooter { margin-bottom:10px; }
+ 
+ section.replyList div.replyFooter button { font-size:14px; border: 1px solid #999; background:none; margin-right:10px; }
+</style>
+
+<style>
+ div.replyModal { position:relative; z-index:1; display:none;}
+ div.modalBackground { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.8); z-index:-1; }
+ div.modalContent { position:fixed; top:20%; left:calc(50% - 250px); width:500px; height:250px; padding:20px 10px; background:#fff; border:2px solid #666; }
+ div.modalContent textarea { font-size:16px; font-family:'맑은 고딕', verdana; padding:10px; width:500px; height:200px; }
+ div.modalContent button { font-size:20px; padding:5px 10px; margin:10px 0; background:#fff; border:1px solid #ccc; }
+ div.modalContent button.modal_cancel { margin-left:20px; }
 </style>
 
 </head>
@@ -199,14 +255,30 @@
 							<section class="replyForm">
 								<form role="form" method="post" autocomplete="off">
 								
-								<input type="hidden" name="gdsNum" value="${view.gdsNum}">
+								<input type="hidden" name="gdsNum" id="gdsNum" value="${view.gdsNum}">
 								
 									<div class="input_area">
 										<textarea name="repCon" id="repCon"></textarea>
 									</div>
 
 									<div class="input_area">
-										<button type="submit" id="reply_btn">소감 남기기</button>
+										<button type="button" id="reply_btn">소감 남기기</button>
+										<script>
+ 											$("#reply_btn").click(function(){
+  											var formObj = $(".replyForm form[role='form']");
+ 											var gdsNum = $("#gdsNum").val();
+  											var repCon = $("#repCon").val()
+											var data = {gdsNum : gdsNum,repCon : repCon};
+  												$.ajax({ url : "/controller/shop/view/registReply",
+   														type : "post",
+   														data : data,
+   														success : function(){
+    													replyList();
+    													$("#repCon").val("");
+   															}
+  														});
+ 													});
+										</script>
 									</div>
 
 								</form>
@@ -215,6 +287,7 @@
 
 						<section class="replyList">
 							<ol>
+							<%--
 								<c:forEach items="${reply}" var="reply">
 
 									<li>   
@@ -226,7 +299,47 @@
 										<div class="replyContent">${reply.repCon}</div>  
 									</li>
    								</c:forEach>
+							--%>
 							</ol>
+							<script>
+								replyList();
+							</script>
+
+							<script>
+							$(document).on("click", ".modify", function(){
+								 $(".replyModal").fadeIn(200);
+								 
+								 var repNum = $(this).attr("data-repNum");
+								 var repCon = $(this).parent().parent().children(".replyContent").text();
+								 
+								 $(".modal_repCon").val(repCon);
+								 $(".modal_modify_btn").attr("data-repNum", repNum);
+								 
+								});
+							
+ 								$(document).on("click", ".delete", function(){
+ 									var deleteConfirm = confirm("정말로 삭제하시겠습니까?");
+ 									 if(deleteConfirm){
+  								var data = {repNum : $(this).attr("data-repNum")};
+  								$.ajax({
+   								url : "/controller/shop/view/deleteReply",
+   								type : "post",
+   								data : data,
+   								success : function(result){
+     								if(result == 1){
+     									replyList();
+     								}else{
+     									alert("작성자 본인만 할 수 있습니다.")
+     								}
+  													},
+  													error : function(){
+  														alert("로그인하셔야합니다.")
+  													}
+  										});
+ 									 }
+								});
+							</script>
+							
 						</section>
 					</div>
 				</section>
@@ -245,5 +358,59 @@
 	</footer>
 
 </div>
+<div class="replyModal">
+
+ <div class="modalContent">
+  
+  <div>
+   <textarea class="modal_repCon" name="modal_repCon"></textarea>
+  </div>
+  
+  <div>
+   <button type="button" class="modal_modify_btn">수정</button>
+   <button type="button" class="modal_cancel">취소</button>
+  </div>
+  
+ </div>
+
+ <div class="modalBackground"></div>
+ 
+</div>
+
+<script>
+$(".modal_modify_btn").click(function(){
+	var modifyConfirm = confirm("정말로 수정하시겠습니까?");
+	
+	if(modifyConfirm) {
+		var data = {
+					repNum : $(this).attr("data-repNum"),
+					repCon : $(".modal_repCon").val()
+				};  // ReplyVO 형태로 데이터 생성
+		
+		$.ajax({
+			url : "/controller/shop/view/modifyReply",
+			type : "post",
+			data : data,
+			success : function(result){
+				
+				if(result == 1) {
+					replyList();
+					$(".replyModal").fadeOut(200);
+				} else {
+					alert("작성자 본인만 할 수 있습니다.");							
+				}
+			},
+			error : function(){
+				alert("로그인하셔야합니다.")
+			}
+		});
+	}
+	
+});
+$(".modal_cancel").click(function(){
+ $(".replyModal").fadeOut(200);
+});
+</script>
+
 </body>
 </html>

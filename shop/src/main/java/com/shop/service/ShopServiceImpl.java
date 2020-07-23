@@ -34,7 +34,7 @@ public class ShopServiceImpl implements ShopService{
 	}
 
 	@Override
-	public GoodsViewVO goodsVIew(int gdsNum) throws Exception {
+	public GoodsViewVO goodsView(int gdsNum) throws Exception {
 		// TODO Auto-generated method stub
 		return dao.goodsView(gdsNum);
 	}
@@ -50,5 +50,24 @@ public class ShopServiceImpl implements ShopService{
 		// TODO Auto-generated method stub
 		return dao.replyList(gdsNum);
 	}
+
+	@Override
+	public String idCheck(int repNum) throws Exception {
+		// TODO Auto-generated method stub
+		return dao.idCheck(repNum);
+	}
+
+	@Override
+	public void deleteReply(ReplyVO reply) throws Exception {
+		// TODO Auto-generated method stub
+		dao.deleteReply(reply);
+	}
+
+	@Override
+	public void modifyReply(ReplyVO reply) throws Exception {
+		// TODO Auto-generated method stub
+		dao.modifyReply(reply);
+	}
+	
 
 }

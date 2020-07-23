@@ -60,4 +60,22 @@ public class ShopDAOImpl implements ShopDAO{
 		return sql.selectList(namespace + ".replyList",gdsNum);
 	}
 
+	@Override
+	public String idCheck(int repNum) throws Exception {
+		// TODO Auto-generated method stub
+		return sql.selectOne(namespace + ".replyUserIdCheck",repNum);
+	}
+
+	@Override
+	public void deleteReply(ReplyVO reply) throws Exception {
+		// TODO Auto-generated method stub
+		sql.delete(namespace + ".deleteReply",reply);
+	}
+
+	@Override
+	public void modifyReply(ReplyVO reply) throws Exception {
+		// TODO Auto-generated method stub
+		sql.update(namespace + ".modifyReply",reply);
+	}
+
 }
