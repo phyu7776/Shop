@@ -1,6 +1,13 @@
 
 ![](https://github.com/phyu7776/Shop/blob/master/%EC%BA%A1%EC%B2%98.JPG)  
+
+client에서 요청을하면 controller에 진입하여 요청한 작업을 수행하고 뷰쪽으로 데이터를 전달합니다.  
+@Controller 를 이용하여 컨트롤러 라고 지정합니다.  
+@RequestMapping 으로 jsp파일의 요청경로를 지정합니다.  
+정해진 로직을 수행후 return 으로 뷰파일로 다시 전달합니다.  
 쇼핑몰 만들기 (Maria DB)  
+
+
 이미지 첨부 기능  
 %주의사항%  
 servlet-context.xml  
@@ -49,4 +56,33 @@ admincontroller.java 에서 uploadPath 경로에 요청한 파라미터 값으�
 	 return "redirect:/admin/goods/list";
 	}
 ```
+댓글기능
+관리자권한말고 일반 모드에서 댓글을 달거나 상품을 볼수있게 해놓았습니다
+shop/view 에서 각 카테고리에 해당하는 상품들을 볼수있습니다.
+구조가 WEB-INF/views/shop/list 인데 
+다른 메뉴 aside, header 를 잇는 주소는 ../include/aside.jsp 이런식으로 파일 주소를 ../ 으로 시작하면 연결되는데
+view페이지는 그게 안되고 /controller/를 정확하게 적어주어야 합니다. ../ 으로 하면 주소인식을 못합니다.
+주소 구조를보면
+/controller/shop/view?n=${list.gdsNum}
+인데
+? 뒤에는 여러 파라미터 들이 붙을수있습니다. 
+지금은 gdsNum 을 불러옵니다
+Controller로 view 의 get 코드를 보시면 @RequestParam("n"),int gdsNum 으로 해당하는 상품번호를 불러오는것입니다.
+Model 은 파라미터를 뷰로 넘길수있습니다.
+```java
+//상품 조회
+	@RequestMapping(value = "/view",method = RequestMethod.GET)
+	public void getView(@RequestParam("n")int gdsNum,Model model) throws Exception{
+		logger.info("get view");
+		
+		GoodsViewVO view = service.goodsView(gdsNum);
+		model.addAttribute("view",view);
+		}
+```
 
+ShopService에 goodsView라는 명령어를통해 전달 전달 ... 해서  GoodsViewVO 타입의 view 변수에 집어넣습니다
+ex) model.addAttribute("변수이름",변수에 넣을 데이터 값);
+model.addAttribute("view",view);명령어를 통하여 모델을 통해 view로 넘기면
+jsp 파일에 보시면 불러오는 명령어 view.gdsName
+			        view.cateName 등등...
+Controller를 통해 담아온 정보를 볼수있습니다.
