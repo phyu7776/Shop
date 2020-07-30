@@ -1,12 +1,95 @@
 
 ![](https://github.com/phyu7776/Shop/blob/master/%EC%BA%A1%EC%B2%98.JPG)  
 
-client에서 요청을하면 controller에 진입하여 요청한 작업을 수행하고 뷰쪽으로 데이터를 전달합니다.  
-@Controller 를 이용하여 컨트롤러 라고 지정합니다.  
-@RequestMapping 으로 jsp파일의 요청경로를 지정합니다.  
-정해진 로직을 수행후 return 으로 뷰파일로 다시 전달합니다.  
+유저로 부터 요청이 들어오면 Controller에 연결되어 HandlerMapping 을 참조명령어를 실행 합니다 
+Controller 에서 넘어간 요청은 Service를 호출하고 필요한 데이터들을 DAO를 통해 Mapper 를 실행하여
+필요한 DB를 조회하거나 요청한 작업을 수행합니다.
 쇼핑몰 만들기 (Maria DB)  
 
+데이터 베이스와 스프링 연동
+데이터 베이스에 테이블을 생성후
+Domain pakage 생성 -> VO(DTO)생성
+vo는 Value object 의 약자로 계층간 데이터 교환을 위한 객체이다
+vo클래스에 데이터베이스에서 만든 테이블의 형식에 맞춰 생성 하고
+Getter와 Setter 를 생성해줍니다.
+
+pom.xml 파일에서
+```
+<!-- maria db -->
+<dependency>
+    <groupId>org.mariadb.jdbc</groupId>
+    <artifactId>mariadb-java-client</artifactId>
+    <version>2.3.0</version>
+</dependency>
+
+<!-- org.mybatis/mybatis -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis</artifactId>
+    <version>3.4.1</version>
+</dependency>
+
+<!-- mybatis-spring -->
+<dependency>
+    <groupId>org.mybatis</groupId>
+    <artifactId>mybatis-spring</artifactId>
+    <version>1.3.0</version>
+</dependency>
+
+<!-- spring-jdbc -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>${org.springframework-version}</version>
+</dependency>
+```
+입력하는데 이코드가 mariadb와 연동을 할 수있게 해주는 코드입니다.
+
+root-context.xml - namespace텝 에 필요한 configuration file 을 체크합니다. ( beans, context, jdbc, mybatis)
+
+데이터 베이스에 접속할수 있도록 Source 텝에 빈(bean)코드를 추가합니다
+```
+<bean
+ class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+ id="dataSource">
+ <property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+ <property name="url" value="jdbc:mariadb://127.0.0.1:3306" />
+ <property name="username" value="이름" />
+ <property name="password" value="비밀번호" />
+</bean>
+
+<bean id="sqlSessionFactory"
+ class="org.mybatis.spring.SqlSessionFactoryBean">
+ <property name="dataSource" ref="dataSource" />
+ <property name="configLocation" value="classpath:/mybatis-config.xml" />
+ <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml" />
+</bean>
+
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+ <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+</bean>
+```
+src/main/resources 에 mybatis-config.xml 파일 생성 (https://blog.mybatis.org/) 를 참조
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+</configuration>
+```
+추가합니다
+src/main/resources 에 mapper폴더 추가 Mapper.xml 파일도 추가
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.mappers.board"> // <- 메퍼 주소 맞춰주세요
+
+</mapper>
+```
 
 이미지 첨부 기능  
 %주의사항%  
